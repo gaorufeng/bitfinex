@@ -1,9 +1,19 @@
 via https://pypi.org/project/bitfinex-v2/
 via  https://github.com/ohenrik/bitfinex
 
+1 提示错误 ImportError: DLL load failed: 操作系统无法运行 %1。
+
 如果使用Anaconda3 需要复制2个dll文件 libeay32.dll ssleay32.dll 到  Anaconda3\Lib\site-packages\cryptography\hazmat\bindings 目录下面, 文件在 Anaconda3\pkgs\openssl-1.0.2o-h8ea7d77_0\Library\bin
 
 Copy both files from Anaconda3\pkgs\openssl-1.0.2o-h8ea7d77_0\Library\bin into Anaconda3\Lib\site-packages\cryptography\hazmat\bindings, and it works
+
+更多: https://github.com/pyca/cryptography/issues/4011
+
+hello
+me too i meet this problem under windows 10 , after many search on many websites . i found this solution :
+download this : https://github.com/python/cpython-bin-deps/tree/openssl-bin-1.0.2k
+zip the file and copy the folder (amd or win ) in your sys path : C:\Windows\SysWOW64
+and voila every thing works fine
 
 
 # Bitfinex Python Client
