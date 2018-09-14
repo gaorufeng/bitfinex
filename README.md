@@ -1,3 +1,9 @@
+via https://pypi.org/project/bitfinex-v2/
+via  https://github.com/ohenrik/bitfinex
+
+
+
+
 # Bitfinex Python Client
 
 **Continuation of**: https://github.com/scottjbarr/bitfinex
