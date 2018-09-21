@@ -1,6 +1,87 @@
 via https://pypi.org/project/bitfinex-v2/
 via  https://github.com/ohenrik/bitfinex
 
+wss客户端
+新环境 linux
+create a new environment
+mkdir btenv
+cd btenv
+python3 -m venv env
+source env/bin/activate
+pip3 install git+https://github.com/ohenrik/bitfinex.git
+
+try and use the wss example from my pull request, it will work.
+https://github.com/dantimofte/bitfinex/blob/master/examples/wss_example.py
+
+!!!! be carefull to comment out the neworder command !!!
+windows 提示 
+/client.py", line 308, in new_order_op flags": sum(flags)
+TypeError: unsupported operand type(s) for +: 'int' and 'str'
+
+I edit C:\pytest1\Lib\site-packages\bitfinex\websockets\wss_utils.py UtcNow(), The wss_example.py is OK on my Windows 10 python 36
+
+#windows 10 py36 add
+import time
+def UtcNow():
+#windows 10 py36
+now = time.time()
+#linux
+#now = datetime.datetime.utcnow()
+#return int(float(now.strftime("%s.%f"))*10000000)
+return int(now * 10000000)
+
+delete C:\pytest1\Lib\site-packages\bitfinex\websockets_pycache_\wss_utils.cpython-36.pyc
+(pytest1) C:\pytest1>python wss_example.py
+
+
+=============
+
+增加对stop_limit 的支持
+修改client.py
+new_order_op
+new_order
+
+赋值这2个函数
+ def new_order_op_stop_limit(self, order_type, pair, amount, price, stop_limit_price,hidden=0, flags=None):
+
+        #add  'price_aux_limit':stop_limit_price
+
+        flags = flags or []
+        client_order_id = wss_utils.UtcNow()
+        return {
+            'cid': client_order_id,
+            'type': order_type,
+            'symbol': wss_utils.order_pair(pair),
+            'amount': amount,
+            'price': price,
+            'price_aux_limit':stop_limit_price,  
+            'hidden': hidden,
+            "flags": sum(flags)
+        }
+        
+    #上面的  'price_aux_limit':stop_limit_price,   是新增加的    
+  def new_order_stop_limit(self, order_type, pair, amount, price, stop_limit_price, hidden=0, flags=list()):
+
+
+        operation = self.new_order_op_stop_limit(order_type, pair, amount, price, stop_limit_price, 0, flags)
+        data = [0,wss_utils.get_notification_code('order new'),None,operation]
+        payload = json.dumps(data, ensure_ascii = False).encode('utf8')
+        self.factories["auth"].protocol_instance.sendMessage(payload, isBinary=False)
+        return operation["cid"]        
+        
+        
+使用方法
+如果当前价格是 5元, 
+
+                exch_order = self.mywss.new_order_stop_limit("STOP LIMIT", "tEOSUSD", "3", "6","6.2")
+                当最新价格高于6元时候, 开一个6.2元限价的买多单, 作用你想想....
+                
+                
+                exch_order = self.mywss.new_order_stop_limit("STOP LIMIT", "tEOSUSD", "-3", "4","3.9")
+                当最新价格低于4元时候, 开一个3.9元限价的卖空单, 作用你想想....
+                
+
+
 1 提示错误 ImportError: DLL load failed: 操作系统无法运行 %1。
 
 如果使用Anaconda3 需要复制2个dll文件 libeay32.dll ssleay32.dll 到  Anaconda3\Lib\site-packages\cryptography\hazmat\bindings 目录下面, 文件在 Anaconda3\pkgs\openssl-1.0.2o-h8ea7d77_0\Library\bin
