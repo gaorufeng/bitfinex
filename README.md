@@ -2,35 +2,53 @@ via https://pypi.org/project/bitfinex-v2/
 via  https://github.com/ohenrik/bitfinex
 
 wss客户端
-新环境 linux
+python虚拟环境 linux
+
 create a new environment
+
 mkdir btenv
+
 cd btenv
+
 python3 -m venv env
+
 source env/bin/activate
+
 pip3 install git+https://github.com/ohenrik/bitfinex.git
 
 try and use the wss example from my pull request, it will work.
+
 https://github.com/dantimofte/bitfinex/blob/master/examples/wss_example.py
 
 !!!! be carefull to comment out the neworder command !!!
+
 windows 提示 
+
 /client.py", line 308, in new_order_op flags": sum(flags)
+
 TypeError: unsupported operand type(s) for +: 'int' and 'str'
 
 I edit C:\pytest1\Lib\site-packages\bitfinex\websockets\wss_utils.py UtcNow(), The wss_example.py is OK on my Windows 10 python 36
 
 #windows 10 py36 add
+
 import time
+
 def UtcNow():
+
 #windows 10 py36
+
 now = time.time()
+
 #linux
 #now = datetime.datetime.utcnow()
+
 #return int(float(now.strftime("%s.%f"))*10000000)
+
 return int(now * 10000000)
 
 delete C:\pytest1\Lib\site-packages\bitfinex\websockets_pycache_\wss_utils.cpython-36.pyc
+
 (pytest1) C:\pytest1>python wss_example.py
 
 
