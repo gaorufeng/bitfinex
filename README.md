@@ -24,6 +24,10 @@ https://github.com/dantimofte/bitfinex/blob/master/examples/wss_example.py
 
 windows 提示 
 
+ValueError: Invalid format string
+
+或
+
 /client.py", line 308, in new_order_op flags": sum(flags)
 
 TypeError: unsupported operand type(s) for +: 'int' and 'str'
