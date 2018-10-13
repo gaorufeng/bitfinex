@@ -51,6 +51,8 @@ now = time.time()
 
 return int(now * 10000000)
 
+或 int(float(time.time())*10000000)
+
 delete C:\pytest1\Lib\site-packages\bitfinex\websockets_pycache_\wss_utils.cpython-36.pyc
 
 (pytest1) C:\pytest1>python wss_example.py
